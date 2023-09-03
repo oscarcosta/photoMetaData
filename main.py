@@ -3,9 +3,6 @@ import sys
 import pandas as pd
 import pyexiv2
 
-from PIL import Image
-from PIL.ExifTags import TAGS
-
 
 def extract_image_exif_data(image_path):
     with open(image_path, 'rb') as f:
@@ -15,6 +12,7 @@ def extract_image_exif_data(image_path):
             # for tag, value in exif_data.items():
             #     tag_name = TAGS.get(tag, tag)
             #     exif_data_dict[tag_name] = value
+            # return exif_data_dict
             image_info_dict = {
                 'FileName': f.name,
                 'Date': exif_data.get('Exif.Image.DateTime', None),
@@ -32,14 +30,14 @@ def extract_image_exif_data(image_path):
             return image_info_dict
 
 
-# cmd: main.py <images_directory> <output_file>
+# cmd: python main.py <images_directory> <output_file>
 if __name__ == '__main__':
     image_directory = sys.argv[1]
     output_csv_file = sys.argv[2]
     exif_data_list = []
     # load exif data from files in image directory
     for filename in os.listdir(image_directory):
-        if filename.endswith('.NEF'):
+        if filename.endswith('.NEF'):  # process only this image type
             try:
                 image_path = os.path.join(image_directory, filename)
                 exif_data_list.append(extract_image_exif_data(image_path))
